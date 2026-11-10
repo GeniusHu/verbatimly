@@ -1,0 +1,131 @@
+/* Verbatimly — 极简工具站。白底黑字、单一强调色、系统字体，零装饰。 */
+:root {
+  --ink: #111418;
+  --ink-2: #4b5563;
+  --line: #e5e7eb;
+  --bg: #ffffff;
+  --accent: #0f766e;
+  --accent-ink: #0d5f59;
+  --warn: #b45309;
+  --radius: 10px;
+  --maxw: 880px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+main { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
+a { color: var(--accent); }
+
+/* 顶栏 */
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  max-width: var(--maxw); margin: 0 auto; padding: 18px 20px 0;
+}
+.brand { font-weight: 700; font-size: 20px; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+.topbar nav a { margin-left: 18px; color: var(--ink-2); text-decoration: none; font-size: 14px; }
+.topbar nav a:hover { color: var(--ink); }
+
+/* 首屏 */
+.hero { padding: 40px 0 8px; text-align: center; }
+.hero h1 {
+  font-size: clamp(30px, 5.5vw, 44px);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin: 0 0 10px;
+}
+.sub { color: var(--ink-2); font-size: 17px; margin: 0 auto 26px; max-width: 560px; }
+
+/* 上传框 */
+.dropzone {
+  border: 2px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 44px 20px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  color: var(--ink-2);
+  outline: none;
+}
+.dropzone:hover, .dropzone:focus-visible, .dropzone.dragging { border-color: var(--accent); background: #f0fdfa; }
+.dz-main { font-size: 17px; margin: 12px 0 4px; color: var(--ink); }
+.dz-main .link { color: var(--accent); text-decoration: underline; }
+.dz-hint { font-size: 13px; margin: 0; color: #9ca3af; }
+.quota-line { font-size: 13px; color: var(--ink-2); margin: 10px 0 6px; }
+
+/* 状态与进度 */
+.status { margin: 22px auto 0; max-width: 560px; font-size: 15px; color: var(--ink-2); text-align: center; }
+.status .err { color: var(--warn); }
+.bar { height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; margin-top: 10px; }
+.bar > span { display: block; height: 100%; width: 0%; background: var(--accent); transition: width .3s; }
+
+/* 结果区 */
+.result { margin: 30px 0 10px; text-align: left; }
+.result-toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.result-toolbar .spacer { flex: 1; }
+.toggle { font-size: 14px; color: var(--ink-2); display: inline-flex; align-items: center; gap: 6px; }
+.btn {
+  font: inherit; font-size: 14px;
+  padding: 6px 14px; border-radius: 8px; border: 1px solid var(--line);
+  background: #fff; color: var(--ink); cursor: pointer;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent-ink); }
+.transcript {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 18px 20px; max-height: 480px; overflow-y: auto;
+  font-size: 15px; text-align: left; background: #fff;
+}
+.transcript p { margin: 0 0 10px; }
+.ts { color: var(--accent); font-variant-numeric: tabular-nums; margin-right: 8px; font-size: 13px; user-select: none; }
+.edit-hint { font-size: 12.5px; color: #9ca3af; text-align: right; margin: 6px 0 0; }
+
+/* 价值点 */
+.values { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; padding: 46px 0 10px; text-align: left; }
+.values h3 { font-size: 16px; margin: 0 0 6px; }
+.values p { font-size: 14px; color: var(--ink-2); margin: 0; }
+@media (max-width: 640px) { .values { grid-template-columns: 1fr; gap: 18px; } }
+
+/* 示例转录 */
+.sample { padding: 30px 0 6px; }
+.sample h2, .formats h2, .uses h2, .faq h2, .tools h2 { font-size: 22px; letter-spacing: -0.02em; margin: 0 0 14px; }
+.sample-intro { color: var(--ink-2); font-size: 15px; }
+.sample-transcript { max-height: none; }
+
+/* 格式表 */
+.formats { padding: 30px 0 6px; }
+.formats table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.formats th, .formats td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.formats thead th { color: var(--ink-2); font-weight: 500; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+.formats tbody th { font-weight: 500; white-space: nowrap; }
+
+/* 用途段 */
+.uses { padding: 30px 0 6px; }
+.uses ul { padding-left: 20px; margin: 0; }
+.uses li { margin-bottom: 10px; color: var(--ink-2); }
+.uses strong { color: var(--ink); }
+
+/* FAQ */
+.faq { padding: 30px 0 6px; }
+.faq details { border-bottom: 1px solid var(--line); padding: 14px 0; }
+.faq summary { cursor: pointer; font-weight: 600; font-size: 15.5px; }
+.faq details p { color: var(--ink-2); font-size: 15px; margin: 8px 0 0; }
+
+/* 工具矩阵 */
+.tools { padding: 30px 0 10px; }
+.tool-list { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.tool-list a {
+  display: inline-block; padding: 8px 14px; border: 1px solid var(--line);
+  border-radius: 999px; text-decoration: none; font-size: 14px;
+}
+.tool-list a:hover { border-color: var(--accent); }
+.tools-note { font-size: 13px; color: #9ca3af; }
+
+/* 页脚 */
+.footer { max-width: var(--maxw); margin: 40px auto 0; padding: 22px 20px 34px; border-top: 1px solid var(--line); }
+.footer p { font-size: 13px; color: var(--ink-2); margin: 0 0 4px; }
+.footer .copy { color: #9ca3af; }

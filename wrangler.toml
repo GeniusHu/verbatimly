@@ -1,0 +1,8 @@
+name = "verbatimly"
+pages_build_output_dir = "public"
+compatibility_date = "2026-11-10"
+account_id = "3a0974f21e309a8c2665ebd522aada69"
+
+[[kv_namespaces]]
+binding = "RATE"
+id = "PLACEHOLDER_KV_ID"

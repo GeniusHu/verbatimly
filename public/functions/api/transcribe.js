@@ -1,0 +1,91 @@
+/* Verbatimly Pages Function：POST /api/transcribe
+   Turnstile 校验 → KV 日限流(3/日) → 转发 Groq whisper-large-v3
+   环境绑定（Pages 项目 Settings 里配）：GROQ_API_KEY, TURNSTILE_SECRET, RATE (KV) */
+'use strict';
+
+const GROQ_URL = 'https://api.groq.com/openai/v1/audio/transcriptions';
+const MAX_UPLOAD = 25 * 1024 * 1024;
+
+export async function onRequestPost(context) {
+  const { request, env } = context;
+
+  let form;
+  try { form = await request.formData(); } catch { return json({ error: 'Bad request' }, 400); }
+
+  // 1) Turnstile（未配置 secret 时跳过，上线后必配）
+  const token = form.get('turnstile') || '';
+  if (env.TURNSTILE_SECRET) {
+    if (!token) return json({ error: 'Verification failed — reload the page.' }, 403);
+    const ok = await verifyTurnstile(token, env.TURNSTILE_SECRET, ipOf(request));
+    if (!ok) return json({ error: 'Verification failed — reload the page and try again.' }, 403);
+  }
+
+  // 2) KV 日限流：IP+UA 指纹
+  const key = `r:${await sha256(ipOf(request) + (request.headers.get('User-Agent') || '').slice(0, 80))}:${new Date().toISOString().slice(0, 10)}`;
+  const limit = parseInt(env.DAILY_LIMIT || '3', 10);
+  let used = 0;
+  try { used = parseInt((await env.RATE.get(key)) || '0', 10); } catch (e) {}
+  if (used >= limit) return json({ error: 'Free limit reached (3 files/day). Come back tomorrow.' }, 429);
+
+  // 3) 转发 Groq
+  const file = form.get('file');
+  if (!file || typeof file === 'string' || file.size === 0) return json({ error: 'No audio received.' }, 400);
+  if (file.size > MAX_UPLOAD) return json({ error: 'Audio payload too large.' }, 413);
+
+  const up = new FormData();
+  up.append('file', file, 'audio.mp3');
+  up.append('model', 'whisper-large-v3');
+  up.append('response_format', 'verbose_json');
+  up.append('temperature', '0');
+
+  let groqRes;
+  try {
+    groqRes = await fetch(GROQ_URL, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${env.GROQ_API_KEY}` },
+      body: up,
+    });
+  } catch (e) {
+    return json({ error: 'Transcription service unreachable — try again in a moment.' }, 502);
+  }
+  if (groqRes.status === 429) return json({ error: 'Server is busy right now — try again in a minute.' }, 429);
+  if (!groqRes.ok) {
+    console.error('groq', groqRes.status, (await groqRes.text()).slice(0, 300));
+    return json({ error: 'Transcription failed — please try again.' }, 502);
+  }
+
+  const data = await groqRes.json();
+  try { await env.RATE.put(key, String(used + 1), { expirationTtl: 90000 }); } catch (e) {}
+
+  return json({
+    text: data.text || '',
+    segments: (data.segments || []).map(s => ({ start: s.start, end: s.end, text: s.text })),
+  }, 200);
+}
+
+export async function onRequest() { return json({ error: 'Not found' }, 404); }
+
+function ipOf(request) { return request.headers.get('CF-Connecting-IP') || 'unknown'; }
+
+async function verifyTurnstile(token, secret, ip) {
+  try {
+    const r = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ secret, response: token, remoteip: ip }),
+    });
+    return !!(await r.json()).success;
+  } catch (e) { return false; }
+}
+
+async function sha256(s) {
+  const d = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return [...new Uint8Array(d)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function json(obj, status) {
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://verbatimly.ai' },
+  });
+}

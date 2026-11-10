@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transcribe Video to Text — Free, No Signup, Instant Results</title>
+<meta name="description" content="Upload MP4, MOV, MKV, WebM or AVI and get a timestamped transcript in seconds. 100+ languages, speaker labels, export TXT, SRT or VTT.">
+<link rel="canonical" href="https://verbatimly.ai/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Verbatimly – Transcribe Video to Text",
+  "url": "https://verbatimly.ai/",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any (web browser)",
+  "description": "Free online tool that transcribes video to text with timestamps. Upload MP4, MOV, MKV, WebM or AVI and get TXT, SRT or VTT in seconds. Over 100 languages.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": [
+    "Video to text transcription",
+    "Automatic language detection (100+ languages)",
+    "Timestamped transcripts",
+    "Speaker separation (paid)",
+    "TXT, SRT, VTT export"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Is it really free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. You get 3 files per day, each up to 30 minutes, with no account required. TXT, SRT and VTT export are all free. Speaker separation, files over 30 minutes and batch upload are on the paid plan." } },
+    { "@type": "Question", "name": "Do I need to sign up?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Not for the free tier. No email, no account, no credit card." } },
+    { "@type": "Question", "name": "Which video and audio formats can I upload?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Video: MP4, MOV, MKV, WebM, AVI. Audio: MP3, M4A, WAV, FLAC, OGG, AAC. Over 100 languages are detected automatically, so you don't have to pick one." } },
+    { "@type": "Question", "name": "How long can a video be?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Free: up to 30 minutes and 100 MB per file. Paid: up to 10 hours and 5 GB per file." } },
+    { "@type": "Question", "name": "How fast is it?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Transcription runs on our servers, so there is no AI model to download and nothing to install. A 10-minute video is usually done in under a minute." } },
+    { "@type": "Question", "name": "Can it tell who is speaking?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, with speaker separation (paid plan), each segment is labelled Speaker 1, Speaker 2 and so on, with timestamps." } },
+    { "@type": "Question", "name": "Can I export subtitles?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes — TXT, SRT and VTT subtitle files are all free, ready to upload to YouTube or any video editor." } },
+    { "@type": "Question", "name": "What happens to my files?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Uploaded files and transcripts are deleted automatically within one hour. They are never used to train models and never reviewed by a human." } }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/style.css">
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.0/lame.min.js" defer></script>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="/">Verbatimly</a>
+  <nav>
+    <a href="/#faq">FAQ</a>
+    <a href="/#formats">Formats</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- 1. H1 + 首屏：上传框 700px 内必现 -->
+<section class="hero">
+  <h1>Transcribe Video to Text</h1>
+  <p class="sub">Free, no signup. Upload a video and get a timestamped transcript — no model download, nothing to install.</p>
+
+  <div id="dropzone" class="dropzone" role="button" tabindex="0" aria-label="Upload a video or audio file">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+      <path d="M12 16V4m0 0l-4 4m4-4l4 4" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke-linecap="round"/>
+    </svg>
+    <p class="dz-main">Drop a file here or <span class="link">browse</span></p>
+    <p class="dz-hint">MP4 · MOV · MKV · WebM · AVI · MP3 · WAV · M4A</p>
+    <input type="file" id="fileInput" accept="video/mp4,video/quicktime,video/x-matroska,video/webm,video/x-msvideo,audio/mpeg,audio/mp4,audio/wav,audio/x-flac,audio/ogg,audio/aac,.mp4,.mov,.mkv,.webm,.avi,.mp3,.m4a,.wav,.flac,.ogg,.aac" hidden>
+  </div>
+  <p class="quota-line">Free · 3 files/day · up to 30 min each · no signup</p>
+  <div class="cf-turnstile" data-sitekey="__TURNSTILE_SITEKEY__" data-theme="light"></div>
+
+  <!-- 进度 / 结果区：同页渲染 -->
+  <div id="status" class="status" hidden></div>
+  <div id="result" class="result" hidden>
+    <div class="result-toolbar">
+      <label class="toggle"><input type="checkbox" id="showTimestamps" checked> Timestamps</label>
+      <span class="spacer"></span>
+      <button class="btn ghost" id="copyBtn">Copy</button>
+      <button class="btn ghost" id="txtBtn">TXT</button>
+      <button class="btn ghost" id="srtBtn">SRT</button>
+      <button class="btn ghost" id="vttBtn">VTT</button>
+    </div>
+    <div id="transcript" class="transcript" contenteditable="true" spellcheck="false"></div>
+    <p class="edit-hint">Transcript is editable — click any line to fix it before exporting.</p>
+  </div>
+</section>
+
+<!-- 3. 三行价值点 -->
+<section class="values">
+  <div class="value">
+    <h3>Seconds, not minutes</h3>
+    <p>Transcription runs on our servers. No AI model to download, nothing to install — the file you drop is the only download you make.</p>
+  </div>
+  <div class="value">
+    <h3>Speakers &amp; timestamps</h3>
+    <p>Every paragraph carries a timestamp. Turn on speaker separation and each segment is labelled Speaker 1, Speaker 2.</p>
+  </div>
+  <div class="value">
+    <h3>100+ languages</h3>
+    <p>Detected automatically. English, Spanish, Chinese, Arabic, Hindi — you never pick a language from a dropdown.</p>
+  </div>
+</section>
+
+<!-- 5. 静态示例转录（可索引内容密度） -->
+<section class="sample">
+  <h2>What the transcript looks like</h2>
+  <p class="sample-intro">Here is the first minute of a sample transcript, with timestamps exactly as exported:</p>
+  <div class="transcript sample-transcript">
+    <p><span class="ts">[00:00:03]</span> Welcome back to the show. Today we're talking about how small teams ship fast.</p>
+    <p><span class="ts">[00:00:09]</span> Thanks for having me. I think the honest answer is that most of it comes down to deleting work, not adding it.</p>
+    <p><span class="ts">[00:00:17]</span> Say more about that — what do you actually delete?</p>
+    <p><span class="ts">[00:00:21]</span> Meetings, mostly. And any feature that needs a paragraph of explanation before you can use it.</p>
+  </div>
+</section>
+
+<!-- 6. 格式与限制表 -->
+<section class="formats" id="formats">
+  <h2>Supported formats &amp; limits</h2>
+  <table>
+    <thead><tr><th></th><th>Video</th><th>Audio</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Formats</th><td>MP4, MOV, MKV, WebM, AVI</td><td>MP3, M4A, WAV, FLAC, OGG, AAC</td></tr>
+      <tr><th scope="row">Free tier</th><td>up to 30 min · 100 MB · 3 files/day</td><td>same</td></tr>
+      <tr><th scope="row">Export</th><td>TXT, SRT, VTT — free</td><td>same</td></tr>
+      <tr><th scope="row">Languages</th><td colspan="2">100+, detected automatically</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 7. 三种用途段（内链预留） -->
+<section class="uses">
+  <h2>What people transcribe</h2>
+  <ul>
+    <li><strong>Videos → text.</strong> Interviews, lectures, webinars, screen recordings — turn any video into a searchable transcript.</li>
+    <li><strong>Podcasts → text.</strong> Publish episodes as blog posts, or pull quotes without scrubbing through audio.</li>
+    <li><strong>Meetings → text.</strong> Record the call, drop the file, keep decisions and action items in writing.</li>
+  </ul>
+</section>
+
+<!-- 8. FAQ -->
+<section class="faq" id="faq">
+  <h2>Frequently asked questions</h2>
+  <details open>
+    <summary>Is it really free?</summary>
+    <p>Yes. You get 3 files per day, each up to 30 minutes, with no account required. TXT, SRT and VTT export are all free. Speaker separation, files over 30 minutes and batch upload are on the paid plan.</p>
+  </details>
+  <details>
+    <summary>Do I need to sign up?</summary>
+    <p>Not for the free tier. No email, no account, no credit card.</p>
+  </details>
+  <details>
+    <summary>Which video and audio formats can I upload?</summary>
+    <p>Video: MP4, MOV, MKV, WebM, AVI. Audio: MP3, M4A, WAV, FLAC, OGG, AAC. Over 100 languages are detected automatically, so you don't have to pick one.</p>
+  </details>
+  <details>
+    <summary>How long can a video be?</summary>
+    <p>Free: up to 30 minutes and 100 MB per file. Paid: up to 10 hours and 5 GB per file.</p>
+  </details>
+  <details>
+    <summary>How fast is it?</summary>
+    <p>Transcription runs on our servers, so there is no AI model to download and nothing to install. A 10-minute video is usually done in under a minute.</p>
+  </details>
+  <details>
+    <summary>Can it tell who is speaking?</summary>
+    <p>Yes, with speaker separation (paid plan), each segment is labelled Speaker 1, Speaker 2 and so on, with timestamps.</p>
+  </details>
+  <details>
+    <summary>Can I export subtitles?</summary>
+    <p>Yes — TXT, SRT and VTT subtitle files are all free, ready to upload to YouTube or any video editor.</p>
+  </details>
+  <details>
+    <summary>What happens to my files?</summary>
+    <p>Uploaded files and transcripts are deleted automatically within one hour. They are never used to train models and never reviewed by a human.</p>
+  </details>
+</section>
+
+<!-- 9. 相关工具（内链矩阵，二期扩展） -->
+<section class="tools">
+  <h2>More converters</h2>
+  <ul class="tool-list">
+    <li><a href="/transcribe-video-to-text">Transcribe video to text</a></li>
+    <li><a href="/audio-to-text">Audio to text</a></li>
+    <li><a href="/free-audio-transcriber">Free audio transcriber</a></li>
+  </ul>
+  <p class="tools-note">More tools on the way.</p>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p>Files are deleted within one hour. Never used to train models. <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></p>
+  <p class="copy">© 2026 Verbatimly</p>
+</footer>
+
+<script src="/app.js"></script>
+</body>
+</html>
