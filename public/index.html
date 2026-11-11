@@ -37,7 +37,7 @@
     { "@type": "Question", "name": "Which video and audio formats can I upload?",
       "acceptedAnswer": { "@type": "Answer", "text": "Video: MP4, MOV, MKV, WebM, AVI. Audio: MP3, M4A, WAV, FLAC, OGG, AAC. Over 100 languages are detected automatically, so you don't have to pick one." } },
     { "@type": "Question", "name": "How long can a video be?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Free: up to 30 minutes and 100 MB per file. Paid: up to 10 hours and 5 GB per file." } },
+      "acceptedAnswer": { "@type": "Answer", "text": "Free: up to 30 minutes and 500 MB per file. Paid: up to 10 hours and 5 GB per file." } },
     { "@type": "Question", "name": "How fast is it?",
       "acceptedAnswer": { "@type": "Answer", "text": "Transcription runs on our servers, so there is no AI model to download and nothing to install. A 10-minute video is usually done in under a minute." } },
     { "@type": "Question", "name": "Can it tell who is speaking?",
@@ -85,6 +85,8 @@
   <!-- 进度 / 结果区：同页渲染 -->
   <div id="status" class="status" hidden></div>
   <div id="result" class="result" hidden>
+    <audio id="player" class="player" controls></audio>
+    <p class="player-hint">Click any timestamp to jump to that moment. The current line is highlighted as it plays.</p>
     <div class="result-toolbar">
       <label class="toggle"><input type="checkbox" id="showTimestamps" checked> Timestamps</label>
       <span class="spacer"></span>
@@ -133,7 +135,7 @@
     <thead><tr><th></th><th>Video</th><th>Audio</th></tr></thead>
     <tbody>
       <tr><th scope="row">Formats</th><td>MP4, MOV, MKV, WebM, AVI</td><td>MP3, M4A, WAV, FLAC, OGG, AAC</td></tr>
-      <tr><th scope="row">Free tier</th><td>up to 30 min · 100 MB · 3 files/day</td><td>same</td></tr>
+      <tr><th scope="row">Free tier</th><td>up to 30 min · 500 MB · 3 files/day</td><td>same</td></tr>
       <tr><th scope="row">Export</th><td>TXT, SRT, VTT — free</td><td>same</td></tr>
       <tr><th scope="row">Languages</th><td colspan="2">100+, detected automatically</td></tr>
     </tbody>
@@ -167,7 +169,7 @@
   </details>
   <details>
     <summary>How long can a video be?</summary>
-    <p>Free: up to 30 minutes and 100 MB per file. Paid: up to 10 hours and 5 GB per file.</p>
+    <p>Free: up to 30 minutes and 500 MB per file. Paid: up to 10 hours and 5 GB per file.</p>
   </details>
   <details>
     <summary>How fast is it?</summary>

@@ -81,7 +81,11 @@ a { color: var(--accent); }
   font-size: 15px; text-align: left; background: #fff;
 }
 .transcript p { margin: 0 0 10px; }
-.ts { color: var(--accent); font-variant-numeric: tabular-nums; margin-right: 8px; font-size: 13px; user-select: none; }
+.ts { color: var(--accent); font-variant-numeric: tabular-nums; margin-right: 8px; font-size: 13px; user-select: none; cursor: pointer; }
+.ts:hover { text-decoration: underline; }
+.transcript p.playing { background: #f0fdfa; border-radius: 6px; margin-left: -8px; margin-right: -8px; padding: 4px 8px; }
+.player { width: 100%; margin-bottom: 4px; }
+.player-hint { font-size: 12.5px; color: #9ca3af; margin: 0 0 12px; }
 .edit-hint { font-size: 12.5px; color: #9ca3af; text-align: right; margin: 6px 0 0; }
 
 /* 价值点 */

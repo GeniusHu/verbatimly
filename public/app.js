@@ -3,14 +3,16 @@
 'use strict';
 
 const MAX_MINUTES = 30.5;   // 免费档上限（含少量余量）
-const MAX_BYTES = 100 * 1024 * 1024; // 100MB
+const MAX_BYTES = 500 * 1024 * 1024; // 500MB（只传音轨，浏览器抽轨后仅 ~5MB）
 const API = '/api/transcribe';
 
 const $ = (s) => document.querySelector(s);
 const dz = $('#dropzone'), fileInput = $('#fileInput');
 const statusBox = $('#status'), resultBox = $('#result');
+const player = $('#player');
 let segments = [];          // [{start,end,text}]，导出的唯一事实源
 let busy = false;
+let audioUrl = null;        // 本地 blob：点击时间戳跳播用，不上传
 
 /* ---------- 入口 ---------- */
 dz.addEventListener('click', () => fileInput.click());
@@ -26,18 +28,22 @@ async function handleFile(file) {
   busy = true;
   try {
     setStatus('Reading file…');
+    // 本地播放源：替换旧的
+    if (audioUrl) URL.revokeObjectURL(audioUrl);
+    audioUrl = URL.createObjectURL(file);
+    player.src = audioUrl;
     const dur = await probeDuration(file);
     if (dur && dur > MAX_MINUTES * 60) {
       return fail(`Free tier transcribes up to 30 minutes per file — yours is ${fmtMin(dur)}. Trim it, or split and upload twice.`);
     }
 
-    setStatus('Extracting audio track… (nothing is uploaded yet)');
+    setStatus('Extracting audio track on your device — your video file never leaves this computer.');
     const buf = await decodeAudio(file);
     if (buf.duration > MAX_MINUTES * 60) {
       return fail('Audio track is longer than 30 minutes — free tier limit.');
     }
 
-    setStatus('Compressing audio for upload…');
+    setStatus('Compressing audio locally — only a small audio track (~5 MB) gets uploaded, not your video.');
     const mp3 = await encodeMp3(resampleMono16k(buf));
     if (mp3.size > 24 * 1024 * 1024) {
       return fail('Audio payload unexpectedly large — try a shorter file.');
@@ -157,6 +163,11 @@ function render() {
     p.dataset.start = seg.start; p.dataset.end = seg.end;
     const ts = document.createElement('span');
     ts.className = 'ts'; ts.textContent = `[${fmtClock(seg.start)}]`;
+    ts.title = 'Jump to this moment';
+    ts.addEventListener('click', () => {
+      player.currentTime = seg.start;
+      player.play().catch(() => {});
+    });
     p.appendChild(ts);
     p.appendChild(document.createTextNode(seg.text.trim()));
     box.appendChild(p);
@@ -164,6 +175,26 @@ function render() {
   resultBox.hidden = false;
   resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+/* 播放时高亮当前行 */
+player.addEventListener('timeupdate', () => {
+  const t = player.currentTime;
+  let active = null;
+  for (const p of $('#transcript').querySelectorAll('p')) {
+    const s = parseFloat(p.dataset.start), e = parseFloat(p.dataset.end);
+    const hit = t >= s && t < Math.max(e, s + 0.5);
+    p.classList.toggle('playing', hit);
+    if (hit) active = p;
+  }
+  if (active && !userScrolling) active.scrollIntoView({ block: 'nearest' });
+});
+/* 用户手动滚动时暂停自动跟随，3 秒后恢复 */
+let userScrolling = false, scrollTimer = null;
+$('#transcript').addEventListener('scroll', () => {
+  userScrolling = true;
+  clearTimeout(scrollTimer);
+  scrollTimer = setTimeout(() => { userScrolling = false; }, 3000);
+});
 
 $('#showTimestamps').addEventListener('change', (e) => {
   document.querySelectorAll('.ts').forEach(el => el.style.display = e.target.checked ? '' : 'none');
