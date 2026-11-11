@@ -45,7 +45,8 @@ async function handleFile(file) {
     }
 
     setStatus('Compressing audio locally — only a small audio track (~5 MB) gets uploaded, not your video.');
-    const mp3 = await encodeMp3(resampleMono16k(buf));
+    const mono = await resampleMono16k(buf);
+    const mp3 = await encodeMp3(mono);
     if (mp3.size > 24 * 1024 * 1024) {
       return fail('Audio payload unexpectedly large — try a shorter file.');
     }
@@ -61,7 +62,9 @@ async function handleFile(file) {
     setStatus(`Done in ${secs}s — ${fmtMin(buf.duration)} of audio, ${segments.length} segments. Transcript is editable below.`);
   } catch (err) {
     console.error(err);
-    fail(err && err.userMessage ? err.userMessage : friendly(err));
+    // 开发期直接透出真实错误，便于定位；后续稳定了再收敛为友好文案
+    const msg = (err && (err.userMessage || err.message)) || 'Something went wrong — please try again.';
+    fail(msg);
   } finally {
     busy = false;
   }
