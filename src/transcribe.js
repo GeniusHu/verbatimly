@@ -1,18 +1,17 @@
-/* Verbatimly Pages Function：POST /api/transcribe
-   Turnstile 校验 → KV 日限流(3/日) → 转发 Groq whisper-large-v3
-   环境绑定（Pages 项目 Settings 里配）：GROQ_API_KEY, TURNSTILE_SECRET, RATE (KV) */
+/* 转录处理：Turnstile 校验 → KV 日限流(3/日) → 转发 Groq whisper-large-v3
+   secrets: GROQ_API_KEY, TURNSTILE_SECRET（未配置时跳过校验，上线当天必配）  KV: RATE */
 'use strict';
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/audio/transcriptions';
 const MAX_UPLOAD = 25 * 1024 * 1024;
 
-export async function onRequestPost(context) {
-  const { request, env } = context;
+export async function handleTranscribe(request, env) {
+  if (request.method !== 'POST') return json({ error: 'Not found' }, 404);
 
   let form;
   try { form = await request.formData(); } catch { return json({ error: 'Bad request' }, 400); }
 
-  // 1) Turnstile（未配置 secret 时跳过，上线后必配）
+  // 1) Turnstile 人机校验
   const token = form.get('turnstile') || '';
   if (env.TURNSTILE_SECRET) {
     if (!token) return json({ error: 'Verification failed — reload the page.' }, 403);
@@ -20,14 +19,14 @@ export async function onRequestPost(context) {
     if (!ok) return json({ error: 'Verification failed — reload the page and try again.' }, 403);
   }
 
-  // 2) KV 日限流：IP+UA 指纹
+  // 2) KV 日限流：IP+UA 指纹 → 3 次/日
   const key = `r:${await sha256(ipOf(request) + (request.headers.get('User-Agent') || '').slice(0, 80))}:${new Date().toISOString().slice(0, 10)}`;
   const limit = parseInt(env.DAILY_LIMIT || '3', 10);
   let used = 0;
   try { used = parseInt((await env.RATE.get(key)) || '0', 10); } catch (e) {}
   if (used >= limit) return json({ error: 'Free limit reached (3 files/day). Come back tomorrow.' }, 429);
 
-  // 3) 转发 Groq
+  // 3) 转发 Groq whisper-large-v3
   const file = form.get('file');
   if (!file || typeof file === 'string' || file.size === 0) return json({ error: 'No audio received.' }, 400);
   if (file.size > MAX_UPLOAD) return json({ error: 'Audio payload too large.' }, 413);
@@ -63,8 +62,6 @@ export async function onRequestPost(context) {
   }, 200);
 }
 
-export async function onRequest() { return json({ error: 'Not found' }, 404); }
-
 function ipOf(request) { return request.headers.get('CF-Connecting-IP') || 'unknown'; }
 
 async function verifyTurnstile(token, secret, ip) {
@@ -86,6 +83,6 @@ async function sha256(s) {
 function json(obj, status) {
   return new Response(JSON.stringify(obj), {
     status,
-    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': 'https://verbatimly.ai' },
+    headers: { 'Content-Type': 'application/json' },
   });
 }

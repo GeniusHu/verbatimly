@@ -1,8 +1,18 @@
 name = "verbatimly"
-pages_build_output_dir = "public"
+main = "src/worker.js"
 compatibility_date = "2026-11-10"
-account_id = "3a0974f21e309a8c2665ebd522aada69"
+
+# 静态资源优先匹配，未命中路径落到 Worker（/api/*）
+[assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "none"
 
 [[kv_namespaces]]
 binding = "RATE"
-id = "PLACEHOLDER_KV_ID"
+id = "3787a5f071a745afa901dfcbec6d8aab"
+
+# 自定义域：verbatimly.ai（Cloudflare Registrar 同账号 zone，自动建 DNS）
+routes = [
+  { pattern = "verbatimly.ai", custom_domain = true }
+]
