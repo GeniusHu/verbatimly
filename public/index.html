@@ -51,7 +51,8 @@
 </script>
 <link rel="stylesheet" href="/style.css">
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-<script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.0/lame.min.js" defer></script>
+<script>window.VB_SITEKEY = "0x4AAAAAAF7rzHEN1-v1WbXu";</script>
+<script src="/lame.min.js" defer></script>
 </head>
 <body>
 
@@ -80,7 +81,7 @@
     <input type="file" id="fileInput" accept="video/mp4,video/quicktime,video/x-matroska,video/webm,video/x-msvideo,audio/mpeg,audio/mp4,audio/wav,audio/x-flac,audio/ogg,audio/aac,.mp4,.mov,.mkv,.webm,.avi,.mp3,.m4a,.wav,.flac,.ogg,.aac" hidden>
   </div>
   <p class="quota-line">Free · 3 files/day · up to 30 min each · no signup</p>
-  <div class="cf-turnstile" data-sitekey="0x4AAAAAAF7rzHEN1-v1WbXu" data-theme="light"></div>
+  <div id="tsContainer" hidden></div>
 
   <!-- 进度 / 结果区：同页渲染 -->
   <div id="status" class="status" hidden></div>

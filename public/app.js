@@ -27,6 +27,7 @@ async function handleFile(file) {
   if (file.size > MAX_BYTES) return fail('File too large — free tier allows up to 100 MB. Compress it or try a shorter clip.');
   busy = true;
   try {
+    ensureTurnstile(); // 后台预热人机验证（无感，不打扰用户）
     setStatus('Reading file…');
     // 本地播放源：替换旧的
     if (audioUrl) URL.revokeObjectURL(audioUrl);
@@ -131,9 +132,31 @@ async function encodeMp3(pcmBuf) {
   return new Blob(out, { type: 'audio/mpeg' });
 }
 
+/* ---------- Turnstile：无感模式，选文件时预热，提交时取 token ---------- */
+let tsToken = '', tsRendered = false;
+function ensureTurnstile() {
+  if (tsRendered || !window.turnstile) return;
+  tsRendered = true;
+  try {
+    turnstile.render('#tsContainer', {
+      sitekey: window.VB_SITEKEY,
+      size: 'invisible',
+      callback: (t) => { tsToken = t; },
+      'error-callback': () => { tsToken = ''; },
+      'expired-callback': () => { tsToken = ''; },
+    });
+  } catch (e) { /* Turnstile 未加载时按空 token 走，服务端会拦 */ }
+}
+async function getTurnstileToken() {
+  ensureTurnstile();
+  if (tsToken) return tsToken;
+  for (let i = 0; i < 16 && !tsToken; i++) await new Promise(r => setTimeout(r, 500));
+  return tsToken || '';
+}
+
 /* ---------- 转录请求 ---------- */
 async function transcribe(mp3, filename) {
-  const tsToken = (window.turnstile && turnstile.getResponse()) || '';
+  const tsToken = await getTurnstileToken();
   const fd = new FormData();
   fd.append('file', mp3, 'audio.mp3');
   fd.append('turnstile', tsToken);
