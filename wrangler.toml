@@ -16,3 +16,10 @@ id = "3787a5f071a745afa901dfcbec6d8aab"
 routes = [
   { pattern = "verbatimly.ai", custom_domain = true }
 ]
+
+# Waffo 支付（非敏感项；私钥走 wrangler secret put WAFFO_PRIVATE_KEY）
+[vars]
+WAFFO_MERCHANT_ID = "MER_5PrQadKzkEx6aKArlSjLZe"
+WAFFO_STORE_ID = "STO_34swoWpnn7rYI9aJfMEDS3"
+WAFFO_PRODUCT_ID = "PROD_45dCNPdCpG8fcfDMuFP70L"
+CREDITS_PER_PACK = "5"

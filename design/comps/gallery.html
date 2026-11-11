@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verbatimly — 三个视觉方向</title>
+<style>
+  :root { --ink:#111; --muted:#666; --line:#e8e8e5; --bg:#fafaf8; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI",sans-serif; }
+  .wrap { max-width:1500px; margin:0 auto; padding:40px 28px 80px; }
+  h1 { font-size:34px; letter-spacing:-.02em; margin:0 0 6px; }
+  .lead { color:var(--muted); margin:0 0 40px; }
+  section { padding:34px 0 40px; border-top:1px solid var(--line); }
+  .head { display:flex; align-items:baseline; gap:16px; flex-wrap:wrap; margin-bottom:6px; }
+  h2 { font-size:24px; margin:0; letter-spacing:-.01em; }
+  .tag { font-size:13px; color:#fff; background:#111; border-radius:999px; padding:3px 12px; }
+  .desc { color:var(--muted); margin:0 0 18px; max-width:80ch; }
+  .desc b { color:var(--ink); }
+  .shots { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .shot { background:#fff; border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  .shot img { display:block; width:100%; height:auto; }
+  .cap { font-size:13px; color:var(--muted); padding:8px 12px; }
+  .pros { display:grid; grid-template-columns:1fr 1fr; gap:8px 24px; margin:14px 0 18px; font-size:15px; }
+  .pros div { color:var(--muted); }
+  .pros b { color:var(--ink); font-weight:600; }
+  @media (max-width:900px){ .shots,.pros { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Verbatimly 三个视觉方向</h1>
+  <p class="lead">同一套功能与内容，三种排版语言。看首屏（左）和结果页（右），挑一个方向，我再按它落地。</p>
+
+  <section>
+    <div class="head"><h2>A · The Record 档案记录</h2><span class="tag">编辑感 / 专业</span></div>
+    <p class="desc"><b>把产品输出当主角：</b>页面像一份正式记录——录音状态条、时间码、编号行。产品是什么，页面就长什么样。适合建立"准确、可信"的印象，记者、研究工作场景最贴。</p>
+    <div class="pros">
+      <div><b>适合</b>：强调逐字准确与专业感；内容密度中等，阅读舒服</div>
+      <div><b>不适合</b>：视觉冲击一般，第一眼不够"工具"</div>
+    </div>
+    <div class="shots">
+      <div class="shot"><img src="../shots/record-upload.png" alt="Record 首屏"><div class="cap">首屏</div></div>
+      <div class="shot"><img src="../shots/record-result.png" alt="Record 结果页"><div class="cap">结果页（带波形、可编辑转录稿）</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="head"><h2>B · The Board 看板</h2><span class="tag">工具感 / 高密度</span></div>
+    <p class="desc"><b>信息密度最高的一版：</b>整页是一块块拼接的格子，上传框是最大的那块蓝色格子，其余格子分别装样本、格式、语言、FAQ。第一屏就能看到全部能力，不藏东西。</p>
+    <div class="pros">
+      <div><b>适合</b>：工具属性最强；首屏信息量大，适合"我要马上知道这工具能干什么"的用户</div>
+      <div><b>不适合</b>：格子多了会显得碎；品牌感弱于另外两版</div>
+    </div>
+    <div class="shots">
+      <div class="shot"><img src="../shots/board-upload.png" alt="Board 首屏"><div class="cap">首屏</div></div>
+      <div class="shot"><img src="../shots/board-result.png" alt="Board 结果页"><div class="cap">结果页</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="head"><h2>C · The Sentence 句子即布局</h2><span class="tag">品牌感 / 记忆点</span></div>
+    <p class="desc"><b>视觉冲击最强：</b>一句大字撑满首屏，波形胶囊嵌在句子中间当"词"用。最容易记住，也最像有品牌的产品而不是又一个工具站。代价是首屏信息少，上传按钮是唯一动作。</p>
+    <div class="pros">
+      <div><b>适合</b>：做品牌记忆点、外链和社媒截图好看；留白高级</div>
+      <div><b>不适合</b>：上传入口弱于另外两版；首屏没有拖拽区，转化可能略低</div>
+    </div>
+    <div class="shots">
+      <div class="shot"><img src="../shots/sentence-upload.png" alt="Sentence 首屏"><div class="cap">首屏</div></div>
+      <div class="shot"><img src="../shots/sentence-result.png" alt="Sentence 结果页"><div class="cap">结果页</div></div>
+    </div>
+  </section>
+
+  <p style="color:#666;font-size:14px;margin-top:30px">三版都只是视觉稿：按钮不会真的转录，波形是静态的。选中方向后我把真实功能接上（视图切换、分阶段进度条、可点击波形、logo）。</p>
+</div>
+</body>
+</html>

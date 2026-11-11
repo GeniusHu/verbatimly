@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verbatimly — Direction B: The Board</title>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gap:8px; --r:10px;
+  --page:#d9d9d6; --tile:#ffffff; --soft:#f1f1ef; --ink:#111111; --muted:#6b6b6b;
+  --blue:#1a4be0; --blue-ink:#ffffff; --black:#111111; --black-ink:#f5f5f3;
+  --step-s:13px; --step-b:17px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);
+  font-family:"Switzer",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:var(--step-b);line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.board{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--gap);
+  padding:var(--gap);grid-auto-rows:92px;max-width:1680px;margin:0 auto}
+.tile{border-radius:var(--r);background:var(--tile);padding:22px 24px;overflow:hidden;position:relative}
+.tile.soft{background:var(--soft)}
+.tile.dark{background:var(--black);color:var(--black-ink)}
+.tile.blue{background:var(--blue);color:var(--blue-ink)}
+
+/* name band */
+.name{grid-column:span 12;display:flex;align-items:center;gap:20px}
+.name .brand{display:flex;align-items:center;gap:12px;font-size:34px;font-weight:600;letter-spacing:-.04em}
+.name .brand svg{width:30px;height:30px;color:var(--ink)}
+.name .nav{display:flex;gap:24px;font-size:15px;color:var(--muted);margin-left:auto}
+.name .badge{font-size:13px;color:var(--muted);margin-left:24px;font-variant-numeric:tabular-nums}
+
+/* upload tile */
+.up{grid-column:span 8;grid-row:span 4;background:var(--blue);color:var(--blue-ink);
+  display:flex;flex-direction:column;justify-content:space-between;padding:34px 36px;cursor:pointer}
+.up:hover{background:#153fc4}
+.up .big{font-size:clamp(30px,3vw,44px);font-weight:600;letter-spacing:-.035em;line-height:1.02;max-width:14ch}
+.up .big u{text-decoration-color:#9db2ff;text-underline-offset:6px}
+.up .row{display:flex;align-items:flex-end;gap:20px}
+.up .btn{background:#fff;color:var(--blue);border:0;border-radius:999px;font:inherit;font-weight:600;
+  font-size:16px;padding:13px 24px;cursor:pointer}
+.up .fmt{font-size:13px;line-height:1.6;color:#c3cffc}
+.up .quota{font-size:13px;color:#c3cffc;font-variant-numeric:tabular-nums}
+
+/* fact tiles */
+.fact{grid-column:span 4;grid-row:span 2;display:flex;flex-direction:column;justify-content:space-between}
+.fact .n{font-size:46px;font-weight:600;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums}
+.fact p{margin:0;font-size:15px;color:var(--muted)}
+.fact.dark p{color:#a8a8a4}
+
+/* sample tile */
+.sample{grid-column:span 6;grid-row:span 3}
+.sample h3{margin:0 0 16px;font-size:19px;font-weight:600;letter-spacing:-.02em}
+.srow{display:grid;grid-template-columns:66px 1fr;gap:12px;padding:8px 0;align-items:baseline}
+.srow+.srow{border-top:1px solid #ececeb}
+.srow .t{font-size:12.5px;color:var(--blue);font-variant-numeric:tabular-nums}
+.srow p{margin:0;font-size:15.5px;line-height:1.45}
+
+/* formats */
+.fmts{grid-column:span 3;grid-row:span 3}
+.fmts h3{margin:0 0 14px;font-size:19px;font-weight:600;letter-spacing:-.02em}
+.fmts ul{list-style:none;margin:0;padding:0;font-size:15.5px;line-height:2;color:#3a3a3a}
+.fmts li b{font-weight:600;display:inline-block;width:58px;color:var(--ink)}
+
+/* language */
+.lang{grid-column:span 3;grid-row:span 3;display:flex;flex-direction:column;justify-content:space-between}
+.lang .n{font-size:64px;font-weight:600;letter-spacing:-.05em;line-height:.9}
+.lang p{margin:0;font-size:15px;color:var(--muted)}
+
+/* faq tiles */
+.q{grid-column:span 4;grid-row:span 2}
+.q h3{margin:0 0 10px;font-size:17px;font-weight:600;letter-spacing:-.01em}
+.q p{margin:0;font-size:15px;color:var(--muted);line-height:1.5}
+
+/* footer tile */
+.foot{grid-column:span 12;grid-row:span 2;display:flex;align-items:flex-end;justify-content:space-between;
+  background:var(--black);color:var(--black-ink);padding:26px 30px}
+.foot .nm{font-size:clamp(40px,6vw,84px);font-weight:600;letter-spacing:-.055em;line-height:.85}
+.foot .meta{font-size:13px;color:#8f8f8b;text-align:right;line-height:1.7}
+
+/* ===== result view ===== */
+body.result #uploadView{display:none}
+#resultView{display:none}
+body.result #resultView{display:grid}
+
+.rtitle{grid-column:span 7;grid-row:span 1;display:flex;align-items:center;gap:18px}
+.rtitle h1{margin:0;font-size:30px;letter-spacing:-.035em;font-weight:600}
+.rtitle .sp{flex:1}
+.rtitle .btn{background:var(--soft);border:0;border-radius:999px;font:inherit;font-size:14px;font-weight:500;padding:10px 18px;cursor:pointer}
+.rtitle .btn:hover{background:#e4e4e1}
+.rsub{grid-column:span 5;grid-row:span 1;display:flex;align-items:center;justify-content:flex-end;
+  font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.player{grid-column:span 8;grid-row:span 3;background:var(--black);color:var(--black-ink);padding:22px 24px;
+  display:flex;flex-direction:column;justify-content:space-between}
+.player .wv{display:block;width:100%;height:96px}
+.player .bar{display:flex;align-items:center;gap:14px;font-size:14px;color:#a3a3a0;font-variant-numeric:tabular-nums}
+.player .pbtn{width:44px;height:44px;border-radius:50%;border:0;background:#f5f5f3;display:grid;place-items:center;cursor:pointer;flex:0 0 auto}
+.player .pbtn svg{width:15px;height:15px;fill:#111;margin-left:2px}
+.player .tnow{color:#f5f5f3;font-size:16px}
+
+.actions{grid-column:span 4;grid-row:span 3;display:flex;flex-direction:column;gap:10px}
+.actions .btn{background:var(--soft);border:0;border-radius:10px;font:inherit;font-size:15px;font-weight:500;
+  padding:0 18px;height:52px;cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between}
+.actions .btn:hover{background:#e6e6e3}
+.actions .btn span{color:var(--muted);font-size:13px}
+.actions .btn.primary{background:var(--blue);color:#fff}
+.actions .btn.primary span{color:#c3cffc}
+
+.tr{grid-column:span 12;grid-row:span 5;padding:10px 0}
+.tr .trow{display:grid;grid-template-columns:88px 1fr;gap:16px;padding:13px 24px;align-items:baseline;border-radius:8px}
+.tr .trow:hover{background:#fafaf8}
+.tr .trow.cur{background:var(--soft)}
+.tr .trow .t{font-size:13px;color:var(--blue);font-variant-numeric:tabular-nums;cursor:pointer}
+.tr .trow p{margin:0;font-size:16.5px;line-height:1.5}
+.tr .trow p[contenteditable]:focus{outline:2px solid var(--blue);outline-offset:4px;border-radius:2px}
+
+@media(max-width:900px){
+  .board{grid-auto-rows:auto}
+  .name{grid-column:span 12}
+  .name .nav{display:none}
+  .up{grid-column:span 12;grid-row:auto;min-height:300px}
+  .fact{grid-column:span 12;grid-row:auto}
+  .sample{grid-column:span 12;grid-row:auto}
+  .fmts,.lang{grid-column:span 12;grid-row:auto}
+  .q{grid-column:span 12;grid-row:auto}
+  .foot{grid-column:span 12;grid-row:auto;flex-direction:column;align-items:flex-start;gap:20px}
+  .foot .meta{text-align:left}
+  .rtitle,.rsub,.player,.actions,.tr{grid-column:span 12;grid-row:auto}
+  .rsub{justify-content:flex-start}
+}
+</style>
+</head>
+<body>
+
+<div id="uploadView" class="board">
+  <div class="tile name">
+    <a class="brand" href="#">
+      <svg viewBox="0 0 28 28" fill="none" aria-hidden="true">
+        <rect x="2" y="4" width="3.2" height="20" rx="1.6" fill="currentColor"/>
+        <rect x="7.2" y="9" width="3.2" height="15" rx="1.6" fill="currentColor"/>
+        <rect x="12.4" y="13" width="3.2" height="11" rx="1.6" fill="currentColor"/>
+        <rect x="17.6" y="9" width="3.2" height="15" rx="1.6" fill="currentColor"/>
+        <rect x="22.8" y="4" width="3.2" height="20" rx="1.6" fill="currentColor"/>
+      </svg>
+      Verbatimly
+    </a>
+    <span class="badge">Free · 3 files a day · no account</span>
+    <nav class="nav"><a href="#">FAQ</a><a href="#">Formats</a><a href="#">Privacy</a></nav>
+  </div>
+
+  <div class="tile up" data-ui role="button" tabindex="0">
+    <div class="big">Transcribe video to text, or <u>browse</u> a file.</div>
+    <div class="row">
+      <button class="btn">Choose a file</button>
+      <div class="fmt">MP4 · MOV · MKV · WebM · AVI<br>MP3 · M4A · WAV · FLAC · OGG</div>
+      <div class="quota" style="margin-left:auto">30 min · 500 MB</div>
+    </div>
+  </div>
+
+  <div class="tile soft fact">
+    <span class="n">0 MB</span>
+    <p>Uploaded video. The audio track is extracted in your browser — only ~5 MB leaves the machine.</p>
+  </div>
+  <div class="tile dark fact">
+    <span class="n">14 s</span>
+    <p>Typical turnaround for a 10-minute recording. No model to download, nothing to install.</p>
+  </div>
+
+  <div class="tile sample" data-ui>
+    <h3>What comes back</h3>
+    <div class="srow"><span class="t">00:00:03</span><p>Welcome back to the show. Today we're talking about how small teams ship fast.</p></div>
+    <div class="srow"><span class="t">00:00:09</span><p>Thanks for having me. Most of it comes down to deleting work, not adding it.</p></div>
+    <div class="srow"><span class="t">00:00:17</span><p>Say more about that — what do you actually delete?</p></div>
+    <div class="srow"><span class="t">00:00:21</span><p>Meetings, mostly. And any feature that needs a paragraph of explanation.</p></div>
+  </div>
+
+  <div class="tile soft fmts">
+    <h3>Formats</h3>
+    <ul>
+      <li><b>Video</b> MP4 · MOV · MKV · WebM · AVI</li>
+      <li><b>Audio</b> MP3 · M4A · WAV · FLAC · OGG</li>
+      <li><b>Export</b> TXT · SRT · VTT</li>
+    </ul>
+  </div>
+
+  <div class="tile lang">
+    <div class="n">100+</div>
+    <p>Languages detected automatically. No dropdown, no wrong guess to correct.</p>
+  </div>
+
+  <div class="tile q">
+    <h3>Is it really free?</h3>
+    <p>Three files a day, up to 30 minutes each, no account. Every export is free. Speaker labels and files over 30 minutes are paid.</p>
+  </div>
+  <div class="tile soft q">
+    <h3>Do I need to sign up?</h3>
+    <p>No email, no account, no card. Drop a file and take the transcript.</p>
+  </div>
+  <div class="tile q">
+    <h3>What happens to my file?</h3>
+    <p>Deleted within one hour. Never used to train models, never read by a person.</p>
+  </div>
+
+  <div class="tile foot">
+    <div class="nm">Verbatimly</div>
+    <div class="meta">A transcript is a record.<br>Files deleted within one hour.<br>© 2026 Verbatimly</div>
+  </div>
+</div>
+
+<div id="resultView" class="board">
+  <div class="tile rtitle">
+    <h1>interview-kobe.mp4</h1>
+    <span class="sp"></span>
+    <button class="btn">New file</button>
+  </div>
+  <div class="tile rsub">8 min 12 s · 58 segments · transcribed in 14 s</div>
+
+  <div class="tile player" data-ui>
+    <svg class="wv" viewBox="0 0 1000 96" preserveAspectRatio="none" aria-hidden="true"><g fill="#6f8cff"></g></svg>
+    <div class="bar">
+      <button class="pbtn" aria-label="Play"><svg viewBox="0 0 16 16"><path d="M4 2l10 6-10 6z"/></svg></button>
+      <span class="tnow">04:17</span><span>/ 08:12</span>
+      <span style="margin-left:auto">Click the waveform to jump</span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn primary">Copy transcript <span>all lines</span></button>
+    <button class="btn">Download SRT <span>subtitles</span></button>
+    <button class="btn">Download VTT <span>subtitles</span></button>
+    <button class="btn">Download TXT <span>plain text</span></button>
+  </div>
+
+  <div class="tile tr" data-ui>
+    <div class="trow"><span class="t">00:00:03</span><p contenteditable="true">Welcome back to the show. Today we're talking about how small teams ship fast.</p></div>
+    <div class="trow"><span class="t">00:00:09</span><p contenteditable="true">Thanks for having me. I think the honest answer is that most of it comes down to deleting work, not adding it.</p></div>
+    <div class="trow cur"><span class="t">00:04:17</span><p contenteditable="true">Meetings, mostly. And any feature that needs a paragraph of explanation before you can use it.</p></div>
+    <div class="trow"><span class="t">00:04:23</span><p contenteditable="true">That's a high bar. Doesn't that kill a lot of good ideas before they get a chance?</p></div>
+    <div class="trow"><span class="t">00:04:31</span><p contenteditable="true">It kills the ones that were going to be explained forever. The ones worth keeping explain themselves in a screenshot.</p></div>
+  </div>
+</div>
+
+<script>
+function route(){ document.body.classList.toggle('result', location.hash === '#result'); }
+addEventListener('hashchange', route); route();
+(function(){
+  document.querySelectorAll('.wv, .wave').forEach(svg => {
+    const g = svg.querySelector('g'); if (!g) return;
+    const color = svg.classList.contains('wv') ? '#6f8cff' : '#b4342c';
+    const n = 260; let d = '';
+    for (let i = 0; i < n; i++) {
+      const x = i * (1000 / n);
+      const env = 0.25 + 0.75 * Math.abs(Math.sin(i / 17) * Math.cos(i / 41));
+      const h = 8 + env * 76 * (0.35 + 0.65 * Math.abs(Math.sin(i * 1.7)));
+      d += `<rect x="${x.toFixed(1)}" y="${(48 - h/2).toFixed(1)}" width="${(1000/n - 1.4).toFixed(1)}" height="${h.toFixed(1)}" rx="1.2" fill="${color}" opacity="${(0.5 + env*0.5).toFixed(2)}"/>`;
+    }
+    g.outerHTML = d;
+  });
+})();
+</script>
+</body>
+</html>

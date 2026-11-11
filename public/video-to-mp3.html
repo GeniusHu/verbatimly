@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video to MP3 — Convert MP4, MOV, MKV to MP3 Free, No Upload</title>
+<meta name="description" content="Convert video to MP3 in your browser. MP4, MOV, MKV, WebM, AVI supported. Nothing is uploaded — the audio is extracted on your own device. Free, no signup.">
+<link rel="canonical" href="https://verbatimly.ai/video-to-mp3">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://verbatimly.ai/video-to-mp3">
+<meta property="og:site_name" content="Verbatimly">
+<meta property="og:title" content="Video to MP3 — Convert MP4, MOV, MKV Free, No Upload">
+<meta property="og:description" content="Extract the audio track from any video right in your browser. Nothing is uploaded. Free, no signup.">
+<meta property="og:image" content="https://verbatimly.ai/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Video to MP3 — Convert MP4, MOV, MKV Free">
+<meta name="twitter:description" content="Extract the audio track from any video right in your browser. Nothing is uploaded.">
+<meta name="twitter:image" content="https://verbatimly.ai/og.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Video to MP3 — Verbatimly",
+  "url": "https://verbatimly.ai/video-to-mp3",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any (web browser)",
+  "description": "Free browser-based video to MP3 converter. Extracts the audio track locally, no upload required.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is it really free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. No account, no daily limit, no watermark. The conversion runs in your browser, so it costs us almost nothing to offer."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I have to upload my video?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Your browser extracts the audio track locally. The video never leaves your device, which is also why there is no upload progress bar to wait for."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which formats work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MP4, MOV, MKV, WebM and AVI. If a MOV or MKV fails to decode, export it as MP4 first and try again."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What bitrate do I get?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "128 kbps MP3 at the video's original sample rate, with up to two channels."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long can the video be?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "30 minutes or 500 MB, whichever comes first. Encoding happens on your device, so longer files take noticeably longer."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does it work on a phone?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes on modern iOS and Android browsers. Very long videos can exhaust memory on older phones — trim first if the tab reloads."
+      }
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/style.css">
+<script src="/lame.min.js" defer></script>
+</head>
+<body>
+
+<header class="top wrap">
+  <a class="brand" href="/" aria-label="Verbatimly home">
+    <svg class="logo" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+      <rect x="2" y="4" width="3.2" height="20" rx="1.6" fill="currentColor"/>
+      <rect x="7.2" y="9" width="3.2" height="15" rx="1.6" fill="currentColor"/>
+      <rect x="12.4" y="13" width="3.2" height="11" rx="1.6" fill="currentColor"/>
+      <rect x="17.6" y="9" width="3.2" height="15" rx="1.6" fill="currentColor"/>
+      <rect x="22.8" y="4" width="3.2" height="20" rx="1.6" fill="currentColor"/>
+    </svg>
+    Verbatimly
+  </a>
+  <nav class="nav"><a href="/">Transcribe</a><a href="#faq">FAQ</a></nav>
+</header>
+
+<main class="wrap">
+  <section class="poster">
+    <h1><span class="ln">Video to MP3</span></h1>
+    <p class="sub">Extract the audio track from any video, right here in your browser. Nothing is uploaded — the file never leaves your device.</p>
+
+    <div class="drop" id="dropzone" role="button" tabindex="0" aria-label="Upload a video file">
+      <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+        <path d="M12 16V4m0 0L8 8m4-4l4 4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke-linecap="round"/>
+      </svg>
+      <div class="ask">Drop a video here, or <u>browse</u></div>
+      <div class="drop-formats">MP4 · MOV · MKV · WebM · AVI<br>up to 30 minutes · 500 MB</div>
+      <input type="file" id="fileInput" accept="video/mp4,video/quicktime,video/x-matroska,video/webm,video/x-msvideo,.mp4,.mov,.mkv,.webm,.avi" hidden>
+    </div>
+    <p class="quota"><b>Free</b> · no account · no upload · MP3 128 kbps</p>
+
+    <div class="prog" id="progress" hidden>
+      <p class="prog-text" id="progText"></p>
+      <div class="prog-bar"><span id="progFill"></span></div>
+    </div>
+
+    <div class="mp3-result" id="result" hidden>
+      <div class="mp3-card">
+        <div class="mp3-info">
+          <p class="mp3-name" id="mp3Name"></p>
+          <p class="mp3-meta" id="mp3Meta"></p>
+        </div>
+        <a class="mp3-dl" id="mp3Dl" download>Download MP3</a>
+      </div>
+      <p class="mp3-again"><a href="#" id="againLink">Convert another video</a></p>
+    </div>
+  </section>
+
+  <section class="facts">
+    <p class="lede">Why convert in the browser.</p>
+    <div class="flist">
+      <div class="f"><b>0 MB</b><p><strong>Nothing is uploaded.</strong> The file is decoded on your own device; there is no server to wait for and nothing stored anywhere.</p></div>
+      <div class="f"><b>128</b><p><strong>kbps MP3, stereo.</strong> Original sample rate and channels kept. Good enough for podcasts, music and voice memos alike.</p></div>
+      <div class="f"><b>30</b><p><strong>minutes per file.</strong> Long enough for an episode or a lecture. Longer files need trimming first, because the encoding runs on your device.</p></div>
+    </div>
+  </section>
+
+  <section class="faq" id="faq">
+    <h2>Questions people actually ask.</h2>
+    <div class="q"><h3>Is it really free?</h3><p>Yes. No account, no daily limit, no watermark. The conversion runs in your browser, so it costs us almost nothing to offer.</p></div>
+    <div class="q"><h3>Do I have to upload my video?</h3><p>No. Your browser extracts the audio track locally. The video never leaves your device, which is also why there is no upload progress bar to wait for.</p></div>
+    <div class="q"><h3>Which formats work?</h3><p>MP4, MOV, MKV, WebM and AVI. If a MOV or MKV fails to decode, export it as MP4 first and try again.</p></div>
+    <div class="q"><h3>What bitrate do I get?</h3><p>128 kbps MP3 at the video's original sample rate, with up to two channels.</p></div>
+    <div class="q"><h3>How long can the video be?</h3><p>30 minutes or 500 MB, whichever comes first. Encoding happens on your device, so longer files take noticeably longer.</p></div>
+    <div class="q"><h3>Does it work on a phone?</h3><p>Yes on modern iOS and Android browsers. Very long videos can exhaust memory on older phones — trim first if the tab reloads.</p></div>
+  </section>
+
+  <section class="crosslink">
+    <p>Need the words as well? <a href="/">Transcribe video to text →</a></p>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="in">
+    <div class="name">Verbatimly</div>
+    <div class="small">Files are processed on your device.<br><a href="/privacy" style="color:#c9c9c5;text-decoration:underline">Privacy</a> · <a href="/terms" style="color:#c9c9c5;text-decoration:underline">Terms</a> · <a href="mailto:support@verbatimly.ai" style="color:#c9c9c5;text-decoration:underline">support@verbatimly.ai</a><br>© 2026 Verbatimly</div>
+  </div>
+</footer>
+
+<script src="/video-to-mp3.js"></script>
+</body>
+</html>

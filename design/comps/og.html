@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face {
+    font-family: 'Schibsted Grotesk';
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: block;
+    src: url('../../public/fonts/schibsted-grotesk-latin.woff2') format('woff2');
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    width: 1200px; height: 630px; background: #f6f5f2; color: #101010;
+    font-family: 'Schibsted Grotesk', -apple-system, sans-serif; overflow: hidden;
+    padding: 64px 72px; display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .top { display: flex; align-items: center; gap: 14px; font-size: 30px; font-weight: 600; letter-spacing: -.03em; }
+  .top svg { width: 34px; height: 34px; }
+  .big { font-size: 108px; line-height: .96; letter-spacing: -.045em; font-weight: 600; }
+  .big .slot {
+    display: inline-flex; align-items: center; gap: .3em; vertical-align: baseline;
+    background: #fff; border-radius: 18px; box-shadow: 0 0 0 1px #dedbd2;
+    padding: 0 .5em; height: .9em; margin: 0 .05em; letter-spacing: 0;
+  }
+  .big .tc { font-size: .18em; color: #0f766e; background: #e6f2f0; border-radius: 7px; padding: .12em .45em; font-weight: 500; }
+  .big .tx { font-size: .18em; color: #101010; }
+  .big .caret { display: inline-block; font-size: .18em; width: 3px; height: 1.05em; background: #0f766e; border-radius: 2px; }
+  .bottom { display: flex; align-items: flex-end; justify-content: space-between; }
+  .meta { font-size: 26px; color: #6d6d6d; letter-spacing: -.01em; }
+  .meta b { color: #101010; font-weight: 500; }
+  .wave { width: 380px; height: 72px; }
+</style>
+</head>
+<body>
+  <div class="top">
+    <svg viewBox="0 0 28 28" fill="none" aria-hidden="true">
+      <rect x="2" y="4" width="3.2" height="20" rx="1.6" fill="#101010"/>
+      <rect x="7.2" y="9" width="3.2" height="15" rx="1.6" fill="#101010"/>
+      <rect x="12.4" y="13" width="3.2" height="11" rx="1.6" fill="#101010"/>
+      <rect x="17.6" y="9" width="3.2" height="15" rx="1.6" fill="#101010"/>
+      <rect x="22.8" y="4" width="3.2" height="20" rx="1.6" fill="#101010"/>
+    </svg>
+    Verbatimly
+  </div>
+
+  <div class="big">
+    Transcribe video<br>
+    <span class="slot"><span class="tc">00:14:23</span><span class="tx">and that’s when we decided</span><span class="caret"></span></span><br>
+    to text.
+  </div>
+
+  <div class="bottom">
+    <div class="meta"><b>Free</b> · No signup · 100+ languages · SRT / VTT export</div>
+    <svg class="wave" viewBox="0 0 380 72" preserveAspectRatio="none" aria-hidden="true"><g fill="#0f766e"></g></svg>
+  </div>
+
+<script>
+(function(){
+  const g = document.querySelector('.wave g');
+  let d = '';
+  const n = 90;
+  for (let i = 0; i < n; i++) {
+    const x = i * (380 / n);
+    const env = 0.25 + 0.75 * Math.abs(Math.sin(i / 7) * Math.cos(i / 19));
+    const h = 6 + env * 58 * (0.35 + 0.65 * Math.abs(Math.sin(i * 1.7)));
+    d += `<rect x="${x.toFixed(1)}" y="${(36 - h/2).toFixed(1)}" width="${(380/n - 2).toFixed(1)}" height="${h.toFixed(1)}" rx="1.4" fill="#0f766e" opacity="${(0.55 + env*0.45).toFixed(2)}"/>`;
+  }
+  g.outerHTML = d;
+})();
+</script>
+</body>
+</html>
