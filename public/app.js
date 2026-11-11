@@ -143,7 +143,7 @@ function ensureTurnstile() {
   try {
     turnstile.render('#tsContainer', {
       sitekey: window.VB_SITEKEY,
-      size: 'invisible',
+      appearance: 'interaction-only', // 无感：仅高风险时才显示挑战，平时后台静默通过
       callback: (t) => { tsToken = t; },
       'error-callback': () => { tsToken = ''; },
       'expired-callback': () => { tsToken = ''; },
