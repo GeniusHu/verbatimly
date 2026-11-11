@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Audio Transcription — Free, No Upload, Fast Transcripts</title>
+<meta name="description" content="Transcribe audio to text free — MP3, M4A, WAV, FLAC or video. Audio is extracted in your browser, never uploaded. Timestamps and SRT/VTT export.">
+<link rel="canonical" href="https://verbatimly.ai/audio-transcription">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://verbatimly.ai/audio-transcription">
+<meta property="og:site_name" content="Verbatimly">
+<meta property="og:title" content="Audio Transcription — Free, No Upload">
+<meta property="og:description" content="Transcribe audio to text in under a minute. MP3, M4A, WAV, FLAC or video. Audio is extracted on your device, never uploaded.">
+<meta property="og:image" content="https://verbatimly.ai/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Audio Transcription — Free, No Upload">
+<meta name="twitter:description" content="Transcribe audio to text in under a minute. Audio is extracted on your device, never uploaded.">
+<meta name="twitter:image" content="https://verbatimly.ai/og.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Audio Transcription — Verbatimly",
+  "url": "https://verbatimly.ai/audio-transcription",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any (web browser)",
+  "description": "Free browser-based audio transcription. Upload MP3, M4A, WAV, FLAC or a video file; the audio track is extracted locally and returned as a timestamped transcript with SRT/VTT export.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": [
+    "Audio to text transcription",
+    "Automatic language detection (100+ languages)",
+    "Timestamped transcripts",
+    "Speaker labelling",
+    "TXT, SRT, VTT export",
+    "Audio extracted in the browser, never uploaded"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is audio transcription free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Three files a day, up to 30 minutes each, no account required. Every export — TXT, SRT, VTT — and speaker labelling are free. A credit pack is the only paid product: it adds 5 more files that do not expire and raises the limit to 60 minutes per file."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which audio formats are supported?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MP3, M4A, WAV, FLAC, OGG and AAC. You can also drop a video file — MP4, MOV, MKV, WebM or AVI — and the audio track is extracted automatically."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my audio uploaded to a server?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Your browser decodes the file and compresses the audio track locally. Only a small audio file leaves your device for transcription, and it is discarded once the transcript comes back."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can it separate speakers in an interview?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can label speakers yourself: click the S tag on any line to cycle Speaker 1, 2 or 3. Labels carry into SRT and VTT exports. Automatic detection is not offered."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long can an audio file be?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Free: up to 30 minutes and 500 MB per file. With a credit pack: up to 60 minutes and 500 MB per file."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I export subtitles from audio?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. TXT, SRT and VTT are all free. SRT is what most video editors and YouTube expect; VTT is what HTML5 video players use natively."
+      }
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/style.css">
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script>window.VB_SITEKEY = "0x4AAAAAAF7rzHEN1-v1WbXu";</script>
+<script src="/lame.min.js" defer></script>
+</head>
+<body>
+
+<div id="uploadView">
+<header class="top wrap">
+  <a class="brand" href="/" aria-label="Verbatimly home">
+    <svg class="logo" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+      <rect x="2" y="4" width="3.2" height="20" rx="1.6" fill="currentColor"/>
+      <rect x="7.2" y="9" width="3.2" height="15" rx="1.6" fill="currentColor"/>
+      <rect x="12.4" y="13" width="3.2" height="11" rx="1.6" fill="currentColor"/>
+      <rect x="17.6" y="9" width="3.2" height="15" rx="1.6" fill="currentColor"/>
+      <rect x="22.8" y="4" width="3.2" height="20" rx="1.6" fill="currentColor"/>
+    </svg>
+    Verbatimly
+  </a>
+  <nav class="nav">
+    <a href="/">Video to text</a>
+    <a href="/video-to-mp3">Video to MP3</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="poster">
+    <h1>
+      <span class="ln">Audio transcription,</span>
+      <span class="ln">word for word.</span>
+    </h1>
+    <p class="sub">Drop an MP3, WAV, M4A or FLAC — or a whole video. The audio track is pulled out in your browser and comes back as a timestamped transcript in under a minute.</p>
+
+    <div class="drop" id="dropzone" role="button" tabindex="0" aria-label="Upload an audio or video file">
+      <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+        <path d="M12 16V4m0 0L8 8m4-4l4 4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke-linecap="round"/>
+      </svg>
+      <div class="ask">Drop a recording here, or <u>browse</u></div>
+      <div class="drop-formats">MP3 · M4A · WAV · FLAC · OGG · AAC<br>MP4 · MOV · MKV · WebM · AVI</div>
+      <input type="file" id="fileInput" accept="audio/mpeg,audio/mp4,audio/wav,audio/x-flac,audio/ogg,audio/aac,video/mp4,video/quicktime,video/x-matroska,video/webm,video/x-msvideo,.mp3,.m4a,.wav,.flac,.ogg,.aac,.mp4,.mov,.mkv,.webm,.avi" hidden>
+    </div>
+    <p class="quota"><b>Free</b> · 3 files a day · up to 30 minutes each · no account<span id="paidBadge"></span> · <a href="#" id="buyLink">need more? buy a pack</a></p>
+    <p class="quota-note">Longer than 30 minutes? <a href="/video-to-mp3">Extract the audio first</a>, or split the file into two.</p>
+
+    <div id="tsContainer" class="ts-slot"></div>
+
+    <div class="prog" id="progress" hidden>
+      <p class="prog-text" id="progText"></p>
+      <div class="prog-bar"><span id="progFill"></span></div>
+    </div>
+
+    <div class="notice" id="notice" hidden></div>
+
+    <div class="buy" id="buyBox" hidden>
+      <p id="buyText">You've used your 3 free files today. Buy a pack to keep going now.</p>
+      <div class="buy-row">
+        <button class="buy-btn" id="buyBtn">Buy 5 files · $3</button>
+        <span class="buy-alt">or come back tomorrow for 3 more free</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="record" data-ui aria-label="Example transcript">
+    <div class="rhead"><span>TRANSCRIPT</span><span>LANG EN</span><span>SPEAKERS 2</span><span class="r">00:00:00 — 00:00:21</span></div>
+    <div class="rlines">
+      <div class="rline"><span class="tc">00:00:03</span><span class="no">1</span><p>So the recording started before we joined — do you want me to transcribe the whole thing or just your part?</p></div>
+      <div class="rline"><span class="tc">00:00:11</span><span class="no">2</span><p>The whole thing. There's a bit at the start where he explains the background and I want that in the quote.</p></div>
+      <div class="rline"><span class="tc">00:00:19</span><span class="no">3</span><p>Got it. Two speakers, then — I'll label them S1 and S2 before exporting.</p></div>
+      <div class="rline"><span class="tc">00:00:27</span><span class="no">4</span><p>And can you give me SRT as well? We want to put the segment on the site with captions.</p></div>
+      <div class="rline"><span class="tc">00:00:35</span><span class="no">5</span><p>Both are free. TXT for the quote, SRT for the video version — same timestamps.</p></div>
+    </div>
+    <div class="rfoot"><span>5 segments</span><span>112 words</span><span>Timestamps survive the export</span></div>
+  </section>
+
+  <section class="facts">
+    <p class="lede">Three things that make it usable.</p>
+    <div class="flist">
+      <div class="f"><b>0 MB</b><p><strong>Your recording is never uploaded.</strong> The audio is decoded and compressed in your browser; only a small compressed track leaves the machine.</p></div>
+      <div class="f"><b>100+</b><p><strong>Languages, detected.</strong> English, Spanish, Mandarin, Arabic, Hindi. No dropdown, no wrong guess to correct afterwards.</p></div>
+      <div class="f"><b>3</b><p><strong>Exports, all free.</strong> TXT for reading, SRT and VTT for video, timestamps intact.</p></div>
+    </div>
+  </section>
+
+  <section class="guide">
+    <h2>How to transcribe audio to text in three steps</h2>
+    <ol class="steps">
+      <li><strong>Drop an audio file.</strong> MP3, M4A, WAV, FLAC, OGG or AAC. If you only have a video, drop that instead — your browser extracts the audio track and ignores the pictures. Nothing is uploaded, which is why a 400 MB file is ready in seconds.</li>
+      <li><strong>The audio is transcribed.</strong> A compressed copy goes to our server, runs through a speech model, and comes back as timestamped segments. A 10-minute recording usually finishes before you switch tabs.</li>
+      <li><strong>You edit and export.</strong> Fix a name, label the speakers, then take the transcript as TXT, SRT or VTT. Nothing is kept on our side once the request finishes.</li>
+    </ol>
+  </section>
+
+  <section class="formats" id="formats">
+    <h2>Supported audio and video formats</h2>
+    <table>
+      <thead><tr><th></th><th>Audio</th><th>Video</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Formats</th><td>MP3, M4A, WAV, FLAC, OGG, AAC</td><td>MP4, MOV, MKV, WebM, AVI</td></tr>
+        <tr><th scope="row">Free tier</th><td>up to 30 min · 500 MB · 3 files/day</td><td>same</td></tr>
+        <tr><th scope="row">Export</th><td>TXT, SRT, VTT — free</td><td>same</td></tr>
+        <tr><th scope="row">Languages</th><td colspan="2">100+, detected automatically</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="uses">
+    <h2>What people transcribe</h2>
+    <ul>
+      <li><strong>Interviews → text.</strong> Journalists, researchers and podcasters. Record on a phone or a Zoom call, drop the file, and get the quotes with timestamps you can go back to. Label the interviewer and the guest so the transcript reads like a conversation instead of a wall of text.</li>
+      <li><strong>Podcasts → text.</strong> Publish episodes as blog posts, or pull quotes without scrubbing through audio. An hour-long episode comes back with timestamps you can cite and link to.</li>
+      <li><strong>Meetings → text.</strong> Record the call, drop the file, keep decisions and action items in writing. Nobody has to take notes, and nobody argues later about what was agreed.</li>
+      <li><strong>Lectures and talks → text.</strong> A one-hour seminar becomes searchable notes. Export SRT and the same recording gets captions for the video version.</li>
+    </ul>
+  </section>
+
+  <section class="guide">
+    <h2>Why the audio is processed on your device</h2>
+    <p class="guide-note" style="margin-top:0">Most online transcription services upload the whole recording to a server before anything happens. That means waiting for a large file to travel, and trusting someone else's storage with an interview that may not be yours to hand over. Verbatimly only needs the audio, and the audio can be prepared locally. Your browser decodes the file and compresses the track first, so the upload step takes a second instead of ten minutes, nothing has to be cleaned up afterwards, and the service can stay free for occasional use.</p>
+  </section>
+
+  <section class="guide">
+    <h2>Interviews and meetings: getting the speakers right</h2>
+    <p class="guide-note" style="margin-top:0">Automatic speaker detection is unreliable the moment two people talk over each other, so Verbatimly does something simpler and more honest: you label them. Every line has an S tag — click it to cycle S1, S2 and S3. Once the labels are set, they are written into the SRT and VTT exports as speaker prefixes, which is what most video editors and caption workflows expect. For a two-person interview this takes about a minute, and it is the difference between a usable transcript and a wall of unattributed text.</p>
+  </section>
+
+  <section class="guide">
+    <h2>SRT or VTT? Which one you need</h2>
+    <div class="guide-cols">
+      <div>
+        <h3>SRT</h3>
+        <p>The safe default. Every video platform, editor and player reads it: YouTube, Premiere, Final Cut, DaVinci, VLC. If you are uploading captions somewhere, start here.</p>
+      </div>
+      <div>
+        <h3>VTT</h3>
+        <p>What the web uses. HTML5 video players take VTT natively, and it supports styling and positioning that SRT does not. Pick VTT if the video lives on your own site.</p>
+      </div>
+    </div>
+    <p class="guide-note">Both are plain text with the same timestamps. Convert between them by renaming the file and swapping commas for periods — or export both here, they are both free.</p>
+  </section>
+
+  <section class="faq" id="faq">
+    <h2>Questions people actually ask.</h2>
+    <div class="q"><h3>Is audio transcription free?</h3><p>Yes. Three files a day, up to 30 minutes each, no account required. Every export — TXT, SRT, VTT — and speaker labelling are free. A credit pack is the only paid product: it adds 5 more files that do not expire and raises the limit to 60 minutes per file.</p></div>
+    <div class="q"><h3>Which audio formats are supported?</h3><p>MP3, M4A, WAV, FLAC, OGG and AAC. You can also drop a video file — MP4, MOV, MKV, WebM or AVI — and the audio track is extracted automatically.</p></div>
+    <div class="q"><h3>Is my audio uploaded to a server?</h3><p>No. Your browser decodes the file and compresses the audio track locally. Only a small audio file leaves your device for transcription, and it is discarded once the transcript comes back.</p></div>
+    <div class="q"><h3>Can it separate speakers in an interview?</h3><p>You can label speakers yourself: click the S tag on any line to cycle Speaker 1, 2 or 3. Labels carry into SRT and VTT exports. Automatic detection is not offered.</p></div>
+    <div class="q"><h3>How long can an audio file be?</h3><p>Free: up to 30 minutes and 500 MB per file. With a credit pack: up to 60 minutes and 500 MB per file.</p></div>
+    <div class="q"><h3>Can I export subtitles from audio?</h3><p>Yes. TXT, SRT and VTT are all free. SRT is what most video editors and YouTube expect; VTT is what HTML5 video players use natively.</p></div>
+  </section>
+
+  <section class="tools">
+    <h2>More tools</h2>
+    <ul class="tool-list">
+      <li><a href="/">Transcribe video to text</a></li>
+      <li><a href="/video-to-mp3">Video to MP3</a></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="in">
+    <div class="name">Verbatimly</div>
+    <div class="small">A transcript is a record. Files are not stored after transcription.<br>Never used to train models.<br><a href="#" id="shareBtnFoot" style="color:#c9c9c5;text-decoration:underline">Share</a> · <a href="/privacy" style="color:#c9c9c5;text-decoration:underline">Privacy</a> · <a href="/terms" style="color:#c9c9c5;text-decoration:underline">Terms</a> · <a href="mailto:support@verbatimly.ai" style="color:#c9c9c5;text-decoration:underline">support@verbatimly.ai</a><br><a href="https://startupfa.me/s/verbatimly?utm_source=verbatimly.ai" target="_blank" rel="noopener" style="display:inline-block;margin-top:12px;opacity:.65"><img src="https://startupfa.me/badges/featured-badge-small.webp" alt="Verbatimly - Featured on Startup Fame" width="224" height="36" style="display:block"></a><br>© 2026 Verbatimly</div>
+  </div>
+</footer>
+</div>
+
+<div id="resultView">
+<header class="top wrap">
+  <a class="brand" href="/" aria-label="Verbatimly home">
+    <svg class="logo" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+      <rect x="2" y="4" width="3.2" height="20" rx="1.6" fill="currentColor"/>
+      <rect x="7.2" y="9" width="3.2" height="15" rx="1.6" fill="currentColor"/>
+      <rect x="12.4" y="13" width="3.2" height="11" rx="1.6" fill="currentColor"/>
+      <rect x="17.6" y="9" width="3.2" height="15" rx="1.6" fill="currentColor"/>
+      <rect x="22.8" y="4" width="3.2" height="20" rx="1.6" fill="currentColor"/>
+    </svg>
+    Verbatimly
+  </a>
+  <nav class="nav"><a href="/#faq">FAQ</a><a href="/#formats">Formats</a></nav>
+</header>
+
+<main class="wrap rv">
+  <div class="rvhead">
+    <h2 id="resultTitle">Your transcript</h2>
+    <span class="sp"></span>
+    <button class="btn" id="newFileBtn">New file</button>
+  </div>
+  <p class="rvsum" id="resultSummary"></p>
+
+  <div class="wavebox" data-ui>
+    <div class="wave-wrap">
+      <canvas id="wave" class="wave"></canvas>
+      <div class="wave-mask" id="waveMask"></div>
+      <div class="playhead" id="playhead" hidden></div>
+    </div>
+    <div class="pbar">
+      <button class="playbtn" id="playBtn" aria-label="Play">
+        <svg id="iconPlay" viewBox="0 0 16 16"><path d="M4 2l10 6-10 6z"/></svg>
+        <svg id="iconPause" viewBox="0 0 16 16"><path d="M4 2h3v12H4zM9 2h3v12H9z"/></svg>
+      </button>
+      <span class="time" id="timeNow">00:00</span>
+      <span id="timeTotal">/ 00:00</span>
+      <span class="jump-hint">Click the waveform to jump</span>
+    </div>
+  </div>
+  <audio id="player" preload="metadata"></audio>
+
+  <div class="toolbar">
+    <label class="toggle"><span class="box"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-6"/></svg></span>
+      <input type="checkbox" id="showTimestamps" checked> Timestamps</label>
+    <span class="spacer"></span>
+    <button class="btn" id="copyBtn">Copy</button>
+    <button class="btn" id="txtBtn">TXT</button>
+    <button class="btn" id="srtBtn">SRT</button>
+    <button class="btn" id="vttBtn">VTT</button>
+    <span class="share-wrap">
+      <button class="btn share" id="shareBtn" title="Share Verbatimly" aria-haspopup="true" aria-expanded="false">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M11 2l3 3-3 3V6H6a2 2 0 00-2 2v1H2V8a4 4 0 014-4h5V2z" fill="currentColor"/><path d="M4 11v2h8v-3h2v4a1 1 0 01-1 1H3a1 1 0 01-1-1v-4h2v2z" fill="currentColor" opacity=".55"/></svg>
+        Share
+      </button>
+      <div class="share-pop" id="sharePop" hidden>
+        <a href="#" data-share="x">Post on X</a>
+        <a href="#" data-share="facebook">Facebook</a>
+        <a href="#" data-share="linkedin">LinkedIn</a>
+        <a href="#" data-share="reddit">Reddit</a>
+        <button type="button" data-share="copy">Copy link</button>
+      </div>
+    </span>
+  </div>
+
+  <div id="transcript" class="tp" contenteditable="true" spellcheck="false"></div>
+  <p class="edithint">Every line is editable — click and type before you export.</p>
+</main>
+</div>
+
+<script src="/app.js?v=20261111c"></script>
+</body>
+</html>

@@ -725,7 +725,8 @@ if (heroSlot) {
     '<span class="caret"></span>';
 }
 const slotTc = $('#slotTc'), slotTx = $('#slotTx');
-heroSlot.addEventListener('mouseenter', () => {
+// 只有首页有 #heroSlot；/audio-transcription 等内页没有，跳过即可
+heroSlot?.addEventListener('mouseenter', () => {
   slotIdx = (slotIdx + 1) % SLOT_LINES.length;
   slotTx.classList.add('swap');
   setTimeout(() => {
