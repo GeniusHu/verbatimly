@@ -63,7 +63,17 @@ export async function handleTranscribe(request, env) {
   } catch (e) {
     return json({ error: 'Transcription service unreachable — try again in a moment.' }, 502);
   }
-  if (groqRes.status === 429) return json({ error: 'Server is busy right now — try again in a minute.' }, 429);
+  if (groqRes.status === 429) {
+    // 两种 429 要分开说：Groq 免费层的「日额度耗尽」等一分钟也不会好，
+    // 而且不能引导买点数包——额度是 Groq 那边全站共用的，买了照样调不通。
+    const body = await groqRes.text().catch(() => '');
+    console.error('groq 429', body.slice(0, 300));
+    if (/per day|\bRPD\b|\bASPD\b|\bdaily\b/i.test(body)) {
+      console.error('groq daily quota EXHAUSTED — site-wide outage until reset');
+      return json({ error: 'Transcription capacity for today is used up — please come back tomorrow.', quota_exhausted: true }, 429);
+    }
+    return json({ error: 'Server is busy right now — try again in a minute.' }, 429);
+  }
   if (!groqRes.ok) {
     console.error('groq', groqRes.status, (await groqRes.text()).slice(0, 300));
     return json({ error: 'Transcription failed — please try again.' }, 502);
